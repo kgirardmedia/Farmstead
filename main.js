@@ -8,6 +8,7 @@ let rows = 64;
 let cols = 64;
 let render;
 
+
 function preload() {
   tileSet = loadImage('Tilesets/Environment/terrain_atlas.png');
   guy = loadImage('Entities/Player/Player.png');
@@ -46,6 +47,7 @@ function setup() {
   parse = new parseMap();
   render = new renderMap();
   Character = new character(450, 400, 40);
+  collision = new Collision();
 
   // createGrid();
 
@@ -97,8 +99,13 @@ class character {
   display() {
     let offsetX = this.CharacterPosX - width / 2;
     let offsetY = this.CharacterPosY - height / 2;
-
     this.idle;
+    playerR = {
+      x: Character.CharacterPosX,
+      y: Character.CharacterPosY,
+      w: Character.CharacterSize,
+      h: Character.CharacterSize,
+  }
     
     // x and y are both moving (left top)
     if (this.CharacterPosX <= this.CharacterPosX - offsetX && this.CharacterPosY <= this.CharacterPosY - offsetY) {
