@@ -3,7 +3,6 @@ let grid = [];
 let debug = true;
 let guy;
 let selector;
-let move;
 let rows = 64;
 let cols = 64;
 let render;
@@ -53,20 +52,32 @@ function scrolling() {
 
 function p1HitboxChecker(player, x, y, w, h) {
   //Top of box collision
-  if (player.x > x - w + 1 && player.x < x + w - 11 && player.y > y - h - 7 && player.y < y - h - 2) {
-    player.y = y - h - 7;
+  if (player.x > x - w + 1 && 
+      player.x < x + w - 11 && 
+      player.y > y - h - 7 && 
+      player.y < y - h - 2) {
+      player.y = y - h - 7;
   }
   //Bottom of box collision
-  if (player.x > x - w + 1 && player.x < x + w - 11 && player.y > y + h - 30 && player.y < y + h - 25) {
-    player.y = y + h - 25;
+  if (player.x > x - w + 1 && 
+      player.x < x + w - 11 && 
+      player.y > y + h - 30 && 
+      player.y < y + h - 25) {
+      player.y = y + h - 25;
   }
   //Right of box collision
-  if (player.x > x + w - 15 && player.x < x + w - 10 && player.y > y - h - (player.sz % h) + 1 && player.y < y + (h - player.sz / 2) - 6) {
-    player.x = x + h - 10;
+  if (player.x > x + w - 20 && 
+      player.x < x + w - 10 && 
+      player.y > y - h - (player.sz % h) + 1 && 
+      player.y < y + (h - player.sz / 2) - 6) {
+      player.x = x + h - 10;
   }
   // Left of box collision
-  if (player.x > x - w && player.x < x - w + 10 && player.y > y - h - (player.sz % h) + 1 && player.y < y + (h - player.sz / 2) - 6) {
-    player.x = x - player.sz + (player.sz % h);
+  if (player.x > x - w && 
+      player.x < x - w + 10 && 
+      player.y > y - h - (player.sz % h) + 1 && 
+      player.y < y + (h - player.sz / 2) - 6) {
+      player.x = x - player.sz + (player.sz % h);
   }
   return player;
 }
@@ -78,12 +89,6 @@ function setup() {
   p1 = new character(450, 400, 40);
   parse = new parseMap();
   render = new renderMap();
-
-  // collision = new Collision();
-
-  // createGrid();
-
-  move = new Movement();
 }
 
 function draw() {
@@ -95,7 +100,7 @@ function draw() {
   p1.display();
 
   render.Foreground(2);
-  move.characterMovement();
+  characterMovement();
   render.Hitboxes();
 
   if (debug == true) {
@@ -197,7 +202,7 @@ class character {
       this.spritePosY = this.vectorPos.y - (cols * parse.tileSize - height);
     }
 
-    image(guy, this.spritePosX, this.spritePosY, this.vectorPos.sz, this.vectorPos.sz, this.idle, move.charDirection * 40, 40, 40);
+    image(guy, this.spritePosX, this.spritePosY, this.vectorPos.sz, this.vectorPos.sz, this.idle, charDirection * 40, 40, 40);
     // rect(this.vectorPos.x, this.vectorPos.y, 1, 1);
     // noFill();
     if (debug == true) {
