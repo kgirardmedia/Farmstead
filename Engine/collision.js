@@ -2,7 +2,7 @@ let playerR;
 
 
 class Collision {
-    constructor(type, playerR, y, w, h) {
+    constructor(playerR, y, w, h) {
         this.type = type;
         this.x = x;
         this.y = y;

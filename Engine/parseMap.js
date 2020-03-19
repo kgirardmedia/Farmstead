@@ -97,7 +97,9 @@ class parseMap {
                 stroke(255);
                 strokeWeight(2);
                 fill(150);
-                p1.vectorPos = p1HitboxChecker(p1.vectorPos, this.hdesX, this.hdesY, this.tileSize, this.tileSize);
+                if (p1HitboxChecker(p1.vectorPos, this.hdesX, this.hdesY, this.tileSize, this.tileSize) && value) {
+                    print('shit')
+            }
                 // rect(this.hdesX + x, this.hdesY + y, this.htileSize, this.htileSize);
 
                 // //Left of box collision
