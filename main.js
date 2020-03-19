@@ -1,4 +1,4 @@
-let Character;
+let p1;
 let grid = [];
 let debug = true;
 let guy;
@@ -23,20 +23,13 @@ function mouseHitboxChecker(x, y, w) {
     return (false);
   }
 }
-
-function characterHitboxChecker(x, y, w, h) {
-  rect(x, y, w, h);
-  print(x,y,w,h);
+ 
+function p1HitboxChecker(player, x, y, w, h) {
   // Left of box
-  if (Character.CharacterPosX >= x &&
-    Character.CharacterPosX <= x + w &&
-    Character.CharacterPosY >= y &&
-    Character.CharacterPosY <= y + h) {
-
-
-    return (true);
-  } else {
-    return (false);
+  if (player.x > (x - w) && player.x < (x - w) + 10 && 
+      player.y > (y - h) - (player.sz % h) + 1 && 
+      player.y < y + (h - player.sz/2) - 6  && value > 0) {
+      player.x = (x) - player.sz + (player.sz % this.tileSize);
   }
 }
 
@@ -44,10 +37,11 @@ function setup() {
   frameRate(60);
   allLayers();
   createCanvas(800, 600);
+  p1 = new character(450, 400, 40);
   parse = new parseMap();
   render = new renderMap();
-  Character = new character(450, 400, 40);
-  collision = new Collision();
+
+  // collision = new Collision();
 
   // createGrid();
 
@@ -55,13 +49,15 @@ function setup() {
 
 }
 
+
+
 function draw() {
 
   background(75);
   render.Background(5);
   drawGrid();
   mouseGridHover();
-  Character.display();
+  p1.display();
 
   render.Foreground(2);
   move.characterMovement();
@@ -86,112 +82,114 @@ function allLayers() {
 class character {
 
   constructor(CharX, CharY, CharW) {
-
-    this.CharacterPosX = CharX;
-    this.CharacterPosY = CharY;
-    this.Speed = 2;
-    this.CharacterSize = CharW;
+    this.vectorPos = {
+      x: CharX,
+      y: CharY,
+      sp: 2,
+      sz: CharW
+    }
     this.spritePosX;
     this.spritePosY;
+     
 
   }
 
   display() {
-    let offsetX = this.CharacterPosX - width / 2;
-    let offsetY = this.CharacterPosY - height / 2;
+    let offsetX = this.vectorPos.x - width / 2;
+    let offsetY = this.vectorPos.y - height / 2;
     this.idle;
-    playerR = {
-      x: Character.CharacterPosX,
-      y: Character.CharacterPosY,
-      w: Character.CharacterSize,
-      h: Character.CharacterSize,
-  }
+  //   playerR = {
+  //     x: Character.vectorPos.x,
+  //     y: Character.vectorPos.y,
+  //     w: Character.CharacterSize,
+  //     h: Character.CharacterSize,
+  // }
     
     // x and y are both moving (left top)
-    if (this.CharacterPosX <= this.CharacterPosX - offsetX && this.CharacterPosY <= this.CharacterPosY - offsetY) {
-      this.spritePosX = this.CharacterPosX;
-      this.spritePosY = this.CharacterPosY;
+    if (this.vectorPos.x <= this.vectorPos.x - offsetX && this.vectorPos.y <= this.vectorPos.y - offsetY) {
+      this.spritePosX = this.vectorPos.x;
+      this.spritePosY = this.vectorPos.y;
     }
 
     // x is stopped and y is moving (middle top)
-    if (this.CharacterPosX >= this.CharacterPosX - offsetX && this.CharacterPosX <= (cols * parse.tileSize) - width/2 && this.CharacterPosY <= this.CharacterPosY - offsetY) {
-      this.spritePosX = this.CharacterPosX - offsetX;
-      this.spritePosY = this.CharacterPosY;
+    if (this.vectorPos.x >= this.vectorPos.x - offsetX && this.vectorPos.x <= (cols * parse.tileSize) - width/2 && this.vectorPos.y <= this.vectorPos.y - offsetY) {
+      this.spritePosX = this.vectorPos.x - offsetX;
+      this.spritePosY = this.vectorPos.y;
     }
 
     // x and y are both moving (right top)
-    if (this.CharacterPosX >= (cols * parse.tileSize) - width/2 && this.CharacterPosY <= this.CharacterPosY - offsetY) {
-      this.spritePosX = this.CharacterPosX - ((cols * parse.tileSize) - width);
-      this.spritePosY = this.CharacterPosY;
-      print(this.CharacterPosX);
+    if (this.vectorPos.x >= (cols * parse.tileSize) - width/2 && this.vectorPos.y <= this.vectorPos.y - offsetY) {
+      this.spritePosX = this.vectorPos.x - ((cols * parse.tileSize) - width);
+      this.spritePosY = this.vectorPos.y;
+      print(this.vectorPos.x);
     }
 
     // x is moving, y is stopped (left middle)
-    if (this.CharacterPosX <= width / 2 && this.CharacterPosY >= this.CharacterPosY - offsetY && this.CharacterPosY <= (cols * parse.tileSize) - height/2) {
-      this.spritePosX = this.CharacterPosX;
-      this.spritePosY = this.CharacterPosY - offsetY;
+    if (this.vectorPos.x <= width / 2 && this.vectorPos.y >= this.vectorPos.y - offsetY && this.vectorPos.y <= (cols * parse.tileSize) - height/2) {
+      this.spritePosX = this.vectorPos.x;
+      this.spritePosY = this.vectorPos.y - offsetY;
     }
 
     // x and y are both stopped (middle middle)
-    if (this.CharacterPosX >= width / 2 && this.CharacterPosX <= (cols * parse.tileSize) - width/2 && this.CharacterPosY >= this.CharacterPosY - offsetY) {
-      this.spritePosX = this.CharacterPosX - offsetX;
-      this.spritePosY = this.CharacterPosY - offsetY;
+    if (this.vectorPos.x >= width / 2 && this.vectorPos.x <= (cols * parse.tileSize) - width/2 && this.vectorPos.y >= this.vectorPos.y - offsetY) {
+      this.spritePosX = this.vectorPos.x - offsetX;
+      this.spritePosY = this.vectorPos.y - offsetY;
     }
 
     // x is moving and y is stopped (right middle)
-    if (this.CharacterPosX >= (cols * parse.tileSize) - width/2 && this.CharacterPosY >= this.CharacterPosY - offsetY && this.CharacterPosY <= (cols * parse.tileSize) - height/2) {
-      this.spritePosX = this.CharacterPosX - ((cols * parse.tileSize) - width);
-      this.spritePosY = this.CharacterPosY - offsetY;
+    if (this.vectorPos.x >= (cols * parse.tileSize) - width/2 && this.vectorPos.y >= this.vectorPos.y - offsetY && this.vectorPos.y <= (cols * parse.tileSize) - height/2) {
+      this.spritePosX = this.vectorPos.x - ((cols * parse.tileSize) - width);
+      this.spritePosY = this.vectorPos.y - offsetY;
     }
 
     // x and y are both moving (left bottom)
-    if (this.CharacterPosX <= this.CharacterPosX - offsetX && this.CharacterPosY >= (cols * parse.tileSize) - height/2) {
-      this.spritePosX = this.CharacterPosX;
-      this.spritePosY = this.CharacterPosY - ((cols * parse.tileSize) - height);
+    if (this.vectorPos.x <= this.vectorPos.x - offsetX && this.vectorPos.y >= (cols * parse.tileSize) - height/2) {
+      this.spritePosX = this.vectorPos.x;
+      this.spritePosY = this.vectorPos.y - ((cols * parse.tileSize) - height);
     }
 
     // x is stopped y is moving (middle bottom)
-    if (this.CharacterPosX >= this.CharacterPosX - offsetX && this.CharacterPosY >= (cols * parse.tileSize) - height/2) {
-      this.spritePosX = this.CharacterPosX - offsetX;
-      this.spritePosY = this.CharacterPosY - ((cols * parse.tileSize) - height);
+    if (this.vectorPos.x >= this.vectorPos.x - offsetX && this.vectorPos.y >= (cols * parse.tileSize) - height/2) {
+      this.spritePosX = this.vectorPos.x - offsetX;
+      this.spritePosY = this.vectorPos.y - ((cols * parse.tileSize) - height);
     }
 
     // x is stopped y is moving (right bottom)
-    if (this.CharacterPosX >= this.CharacterPosX - offsetX && this.CharacterPosX >= (cols * parse.tileSize) - width/2 && this.CharacterPosY >= this.CharacterPosY - offsetY && this.CharacterPosY >= (cols * parse.tileSize) - height/2) {
-      this.spritePosX = this.CharacterPosX - ((cols * parse.tileSize) - width);
-      this.spritePosY = this.CharacterPosY - ((cols * parse.tileSize) - height);
+    if (this.vectorPos.x >= this.vectorPos.x - offsetX && this.vectorPos.x >= (cols * parse.tileSize) - width/2 && this.vectorPos.y >= this.vectorPos.y - offsetY && this.vectorPos.y >= (cols * parse.tileSize) - height/2) {
+      this.spritePosX = this.vectorPos.x - ((cols * parse.tileSize) - width);
+      this.spritePosY = this.vectorPos.y - ((cols * parse.tileSize) - height);
     }
 
-    image(guy, this.spritePosX, this.spritePosY, this.CharacterSize, this.CharacterSize, this.idle, move.charDirection * 40, 40, 40);
-    // rect(this.CharacterPosX, this.CharacterPosY, 1, 1);
+    image(guy, this.spritePosX, this.spritePosY, this.vectorPos.sz, this.vectorPos.sz, this.idle, move.charDirection * 40, 40, 40);
+    // rect(this.vectorPos.x, this.vectorPos.y, 1, 1);
     // noFill();
-    // rect(this.CharacterPosX, this.CharacterPosY, this.CharacterSize, this.CharacterSize);
-    return [this.CharacterPosX, this.CharacterPosY, this.CharacterSize];
+    // rect(this.vectorPos.x, this.vectorPos.y, this.CharacterSize, this.CharacterSize);
+    return [this.vectorPos.x, this.vectorPos.y, this.vectorPos.sz];
   }
 }
 
 function drawGrid() {
   let x = 0;
   let y = 0;
-  let offsetX = Character.CharacterPosX - width / 2;
-  let offsetY = Character.CharacterPosY - height / 2;
-  if (Character.CharacterPosX <= width / 2) {
+  let offsetX = p1.vectorPos.x - width / 2;
+  let offsetY = p1.vectorPos.y - height / 2;
+  if (p1.vectorPos.x <= width / 2) {
     x = 0;
   }
-  if (Character.CharacterPosX >= width / 2 && Character.CharacterPosX <= (cols * parse.tileSize) - width/2) {
+  if (p1.vectorPos.x >= width / 2 && p1.vectorPos.x <= (cols * parse.tileSize) - width/2) {
     x = 0 - offsetX;
   }
-  if (Character.CharacterPosX >= (cols * parse.tileSize) - width/2) {
+  if (p1.vectorPos.x >= (cols * parse.tileSize) - width/2) {
     x =  - ((cols * parse.tileSize) - width);
   }
 
-  if (Character.CharacterPosY >= height / 2) {
+  if (p1.vectorPos.y >= height / 2) {
     y = 0 - offsetY;
   }
-  if (Character.CharacterPosY >= height / 2 && Character.CharacterPosY <= (cols * parse.tileSize) - height/2) {
+  if (p1.vectorPos.y >= height / 2 && p1.vectorPos.y <= (cols * parse.tileSize) - height/2) {
     y = 0 - offsetY;
   }
-  if (Character.CharacterPosY >= (cols * parse.tileSize) - height/2) {
+  if (p1.vectorPos.y >= (cols * parse.tileSize) - height/2) {
     y =  - ((cols * parse.tileSize) - height);
   }
 
@@ -215,25 +213,25 @@ function drawGrid() {
 function mouseGridHover() {
   let x = 0;
   let y = 0;
-  let offsetX = Character.CharacterPosX - width / 2;
-  let offsetY = Character.CharacterPosY - height / 2;
-  if (Character.CharacterPosX <= width / 2) {
+  let offsetX = p1.vectorPos.x - width / 2;
+  let offsetY = p1.vectorPos.y - height / 2;
+  if (p1.vectorPos.x <= width / 2) {
     x = 0;
   }
-  if (Character.CharacterPosX >= width / 2 && Character.CharacterPosX <= (cols * parse.tileSize) - width/2) {
+  if (p1.vectorPos.x >= width / 2 && p1.vectorPos.x <= (cols * parse.tileSize) - width/2) {
     x = 0 - offsetX;
   }
-  if (Character.CharacterPosX >= (cols * parse.tileSize) - width/2) {
+  if (p1.vectorPos.x >= (cols * parse.tileSize) - width/2) {
     x =  - ((cols * parse.tileSize) - width);
   }
 
-  if (Character.CharacterPosY >= height / 2) {
+  if (p1.vectorPos.y >= height / 2) {
     y = 0 - offsetY;
   }
-  if (Character.CharacterPosY >= height / 2 && Character.CharacterPosY <= (cols * parse.tileSize) - height/2) {
+  if (p1.vectorPos.y >= height / 2 && p1.vectorPos.y <= (cols * parse.tileSize) - height/2) {
     y = 0 - offsetY;
   }
-  if (Character.CharacterPosY >= (cols * parse.tileSize) - height/2) {
+  if (p1.vectorPos.y >= (cols * parse.tileSize) - height/2) {
     y =  - ((cols * parse.tileSize) - height);
   }
   for (let i = 0; i < rows; i++) {
@@ -245,16 +243,6 @@ function mouseGridHover() {
     }
   }
 }
-
-// function renderBackground() {
-//   parse.parseMapData(mapLayers[0], 64, 32, tileSet);
-//   parse.parseMapData(mapLayers[1], 64, 32, tileSet);
-//   parse.parseMapData(mapLayers[2], 64, 32, tileSet);
-//   parse.parseMapData(mapLayers[3], 64, 32, tileSet);
-//   parse.parseMapData(mapLayers[4], 64, 32, tileSet);
-// }
-
-
 
 class renderMap {
   constructor(){

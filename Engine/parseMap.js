@@ -16,27 +16,27 @@ class parseMap {
         this.desY;
         let x = 0;
         let y = 0;
-        let offsetX = Character.CharacterPosX - width / 2;
-        let offsetY = Character.CharacterPosY - height / 2;
+        let offsetX = p1.vectorPos.x - width / 2;
+        let offsetY = p1.vectorPos.y - height / 2;
 
         //Determine whether or not to let the map scroll 
 
-        if (Character.CharacterPosX <= width / 2) {
+        if (p1.vectorPos.x <= width / 2) {
             x = 0;
         }
-        if (Character.CharacterPosX >= width / 2 && Character.CharacterPosX <= (this.cols * this.tileSize) - width/2) {
+        if (p1.vectorPos.x >= width / 2 && p1.vectorPos.x <= (this.cols * this.tileSize) - width/2) {
             x = 0 - offsetX;
         }
-        if (Character.CharacterPosX >= (this.cols * this.tileSize) - width/2) {
+        if (p1.vectorPos.x >= (this.cols * this.tileSize) - width/2) {
             x =  - ((this.cols * this.tileSize) - width);
         }
-        if (Character.CharacterPosY <= height / 2) {
+        if (p1.vectorPos.y <= height / 2) {
             y = 0;
         }
-        if (Character.CharacterPosY >= height / 2 && Character.CharacterPosY <= (this.cols * this.tileSize) - height/2) {
+        if (p1.vectorPos.y >= height / 2 && p1.vectorPos.y <= (this.cols * this.tileSize) - height/2) {
             y = 0 - offsetY;
         }
-        if (Character.CharacterPosY >= (this.cols * this.tileSize) - height/2) {
+        if (p1.vectorPos.y >= (this.cols * this.tileSize) - height/2) {
             y =  - ((this.cols * this.tileSize) - height);
         }
 
@@ -67,77 +67,70 @@ class parseMap {
         this.hdesY;
         let x = 0;
         let y = 0;
-        let offsetX = Character.CharacterPosX - width / 2;
-        let offsetY = Character.CharacterPosY - height / 2;
+        let offsetX = p1.vectorPos.x - width / 2;
+        let offsetY = p1.vectorPos.y - height / 2;
 
-        if (Character.CharacterPosX <= width / 2) {
+        if (p1.vectorPos.x <= width / 2) {
             x = 0;
         }
-        if (Character.CharacterPosX >= width / 2 && Character.CharacterPosX <= (this.cols * this.tileSize) - width/2) {
+        if (p1.vectorPos.x >= width / 2 && p1.vectorPos.x <= (this.cols * this.tileSize) - width/2) {
             x = 0 - offsetX;
         }
-        if (Character.CharacterPosX >= (this.hcols * this.htileSize) - width/2) {
+        if (p1.vectorPos.x >= (this.hcols * this.htileSize) - width/2) {
             x =  - ((this.hcols * this.htileSize) - width);
         }
-        if (Character.CharacterPosY <= height / 2) {
+        if (p1.vectorPos.y <= height / 2) {
             y = 0;
         }
-        if (Character.CharacterPosY >= height / 2 && Character.CharacterPosY <= (this.hcols * this.htileSize) - height/2) {
+        if (p1.vectorPos.y >= height / 2 && p1.vectorPos.y <= (this.hcols * this.htileSize) - height/2) {
             y = 0 - offsetY;
         }
-        if (Character.CharacterPosY >= (this.hcols * this.htileSize) - height/2) {
+        if (p1.vectorPos.y >= (this.hcols * this.htileSize) - height/2) {
             y =  - ((this.hcols * this.htileSize) - height);
         }
 
         for (let i = mapLayers[7].length - 1; i > -1; i--) {
             let value = this.hmap[i] - 1;
-            this.hsourceX = (value % this.htileSize) * this.htileSize;
-            this.hsourceY = floor(value / this.htileSize) * this.htileSize;
             this.hdesX = (i % this.hcols) * this.htileSize;
             this.hdesY = floor(i / this.hcols) * this.htileSize;
             if (this.hdesX + x >= -(this.htileSize) && this.hdesX + x <= width && this.hdesY + y >= -(this.htileSize) && this.hdesY + y <= height && value > 0){
                 stroke(255);
                 strokeWeight(2);
                 fill(150);
+                p1.vectorPos = p1HitboxChecker(p1.vectorPos, this.hdesX, this.hdesY, this.tileSize, this.tileSize);
                 // rect(this.hdesX + x, this.hdesY + y, this.htileSize, this.htileSize);
 
-                //Left of box collision
-                if (Character.CharacterPosX > (this.hdesX - this.tileSize) && 
-                Character.CharacterPosX < (this.hdesX - this.tileSize) + 10 && 
-                Character.CharacterPosY > (this.hdesY - this.tileSize) - (Character.CharacterSize % this.tileSize) + 1 && 
-                Character.CharacterPosY < this.hdesY + (this.tileSize - Character.CharacterSize/2) - 6  && value > 0) {
+                // //Left of box collision
+                // if (p1.vectorPos.x > (this.hdesX - this.tileSize) && 
+                // p1.vectorPos.x < (this.hdesX - this.tileSize) + 10 && 
+                // p1.vectorPos.y > (this.hdesY - this.tileSize) - (p1.vectorPos.sz % this.tileSize) + 1 && 
+                // p1.vectorPos.y < this.hdesY + (this.tileSize - p1.vectorPos.sz/2) - 6  && value > 0) {
 
-                    Character.CharacterPosX = (this.hdesX) - Character.CharacterSize + (Character.CharacterSize % this.tileSize);
-                }
-
-                // if (characterHitboxChecker (this.hdesX - this.tileSize, this.hdesY - this.tileSize, this.htileSize, this.htileSize)) {
-
-                //     Character.CharacterPosX = (this.hdesX) - Character.CharacterSize + (Character.CharacterSize % this.tileSize);
+                //     p1.vectorPos.x = (this.hdesX) - p1.vectorPos.sz + (p1.vectorPos.sz % this.tileSize);
                 // }
 
+                // //Right of box collision
+                // if (p1.vectorPos.x > (this.hdesX) + this.tileSize - 15 &&
+                // p1.vectorPos.x < (this.hdesX + this.tileSize) - 10 &&
+                // p1.vectorPos.y > (this.hdesY - this.tileSize) - (p1.vectorPos.sz % this.tileSize) + 1 &&
+                // p1.vectorPos.y < this.hdesY + (this.tileSize - p1.vectorPos.sz/2) - 6  && value > 0) {
+                //     p1.vectorPos.x = (this.hdesX) + this.tileSize - 10;
+                // }
+                // //Top of box collision
+                // if (p1.vectorPos.x > (this.hdesX - this.tileSize) + 1 && 
+                // p1.vectorPos.x < (this.hdesX + this.tileSize) - 11  && 
+                // p1.vectorPos.y > (this.hdesY - this.tileSize) - 7 && 
+                // p1.vectorPos.y < this.hdesY  - this.tileSize - 2 && value > 0) {
+                //     p1.vectorPos.y = this.hdesY - this.tileSize - 7;
+                // }
 
-                //Right of box collision
-                if (Character.CharacterPosX > (this.hdesX) + this.tileSize - 15 &&
-                Character.CharacterPosX < (this.hdesX + this.tileSize) - 10 &&
-                Character.CharacterPosY > (this.hdesY - this.tileSize) - (Character.CharacterSize % this.tileSize) + 1 &&
-                Character.CharacterPosY < this.hdesY + (this.tileSize - Character.CharacterSize/2) - 6  && value > 0) {
-                    Character.CharacterPosX = (this.hdesX) + this.tileSize - 10;
-                }
-                //Top of box collision
-                if (Character.CharacterPosX > (this.hdesX - this.tileSize) + 1 && 
-                Character.CharacterPosX < (this.hdesX + this.tileSize) - 11  && 
-                Character.CharacterPosY > (this.hdesY - this.tileSize) - 7 && 
-                Character.CharacterPosY < this.hdesY  - this.tileSize - 2 && value > 0) {
-                    Character.CharacterPosY = this.hdesY - this.tileSize - 7;
-                }
-
-                //Bottom of box collision
-                if (Character.CharacterPosX > (this.hdesX - this.tileSize) + 1 && 
-                Character.CharacterPosX < (this.hdesX + this.tileSize) - 11 &&
-                Character.CharacterPosY > this.hdesY + (this.tileSize - 30) && 
-                Character.CharacterPosY < this.hdesY + (this.tileSize - 25) && value > 0) {
-                    Character.CharacterPosY = this.hdesY + (this.tileSize - 25);
-                }                
+                // //Bottom of box collision
+                // if (p1.vectorPos.x > (this.hdesX - this.tileSize) + 1 && 
+                // p1.vectorPos.x < (this.hdesX + this.tileSize) - 11 &&
+                // p1.vectorPos.y > this.hdesY + (this.tileSize - 30) && 
+                // p1.vectorPos.y < this.hdesY + (this.tileSize - 25) && value > 0) {
+                //     p1.vectorPos.y = this.hdesY + (this.tileSize - 25);
+                // }                
                 }                
         }
     }
