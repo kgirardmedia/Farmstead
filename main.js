@@ -1,6 +1,6 @@
 let p1;
 let grid = [];
-let debug = true;
+let debug;
 let guy;
 let selector;
 let rows = 64;
