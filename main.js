@@ -273,10 +273,12 @@ function inventorySlots() {
     bottom: height - 42
   }
   for (let i = 0; i < invSize; i++) {
-    fill(140);
-    stroke(255);
-    strokeWeight(2);
+    noStroke();
+    fill(255);
+    textSize(12);
     image(invPic, (37 * i) + invPos.middle, invPos.bottom, 38, 38);
+    text(i + 1, (37 * i) + (invPos.middle + 23), invPos.bottom + 32)
+
   }
 
 }
