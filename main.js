@@ -1,6 +1,7 @@
 let p1;
 let invPic;
 let grid = [];
+let hotbar;
 let debug;
 let guy;
 let selector;
@@ -51,6 +52,7 @@ function setup() {
   p1 = new character(450, 400, 40);
   parse = new parseMap();
   render = new renderMap();
+  hotbar = new hotbarSlots();
 }
 
 function draw() {
@@ -60,11 +62,12 @@ function draw() {
   drawGrid();
   mouseGridHover();
   p1.display();
-
   render.Foreground(2);
   characterMovement();
   render.Hitboxes();
-  inventorySlots();
+  hotbar.display();
+  hotbar.mouseOverInv();
+  // print(hotbar.mouseOverBar);
   if (debug == true) {
     fill(255);
     stroke(0);
@@ -225,32 +228,49 @@ class renderMap {
   }
 }
 
-function inventorySlots() {
-  let slotSize = (width/20);
-  let invSize = 8
-  let invPos = {
-    middle: (width/2) - ((invSize * slotSize)/2),
+class hotbarSlots {
+  constructor() {
+  this.slotSize = (width/20);
+  this.invSize = 8
+  this.invPos = {
+    middle: (width/2) - ((this.invSize * this.slotSize)/2),
     top: 5,
-    bottom: height - (slotSize + 5),
+    bottom: height - (this.slotSize + 5),
   }
-  let slotPos = {
-    x:0 ,
-    y:0 ,
-  };
-  let textPos = slotSize/5;
+  this.slotPosX = [];
+  this.slotPosY = [];
+  this.textPos = this.slotSize/5;
+  this.mouseOverBar = false;
+}
+display() {
   noStroke();
   fill(50);
   stroke(200);
   strokeWeight(3);
-  for (let i = 0; i < invSize; i++) {
-    image(invPic, (slotSize * i) + invPos.middle, invPos.bottom, slotSize, slotSize);
-    slotPos.x = slotSize * i + invPos.middle;
-    slotPos.y = invPos.bottom;
+  for (let i = 0; i < this.invSize; i++) {
+    image(invPic, (this.slotSize * i) + this.invPos.middle, this.invPos.bottom, this.slotSize, this.slotSize);
+    this.slotPosX[i] = this.slotSize * i + this.invPos.middle;
+    this.slotPosY[i] = this.invPos.bottom;
     stroke(0);
     strokeWeight(0.5);
-    textSize(textPos + 3);
-    text(i + 1, (slotSize * i) + invPos.middle + textPos, invPos.bottom + (slotSize - textPos))
+    textSize(this.textPos + 3);
+    text(i + 1, (this.slotSize * i) + this.invPos.middle + this.textPos, this.invPos.bottom + (this.slotSize - this.textPos))
   }
+}
+
+mouseOverInv() {
+  for (let i = 0; i < this.invSize; i++) {
+  if(mouseHitboxChecker(this.slotPosX[i], this.slotPosY[i], this.slotSize)) {
+  this.mouseOverBar = true;
+  fill(0, 100);
+  noStroke();
+  rect((this.slotSize * i) + this.invPos.middle +  8, this.invPos.bottom + 8, this.slotSize - 16, this.slotSize - 16)
+  }
+  if (mouseHitboxChecker(this.slotPosX[i], this.slotPosY[i], this.slotSize) == false) {
+    this.mouseOverBar = false;
+  }
+}
+}
 }
 
 // Collision Detection Functions------------------------------------------------------------------------------------
