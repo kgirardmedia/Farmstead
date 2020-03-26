@@ -20,14 +20,6 @@ function preload() {
   Forest = loadJSON("Levels/Forest/forest1.json");
 }
 
-function mouseHitboxChecker(x, y, w) {
-  if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + w) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 function scrolling() {
   let offsetX = p1.vectorPos.x - width / 2;
   let offsetY = p1.vectorPos.y - height / 2;
@@ -50,38 +42,6 @@ function scrolling() {
   if (p1.vectorPos.y >= cols * parse.tileSize - height / 2) {
     scroll.y = -(cols * parse.tileSize - height);
   }
-}
-
-function p1HitboxChecker(player, x, y, w, h) {
-  //Top of box collision
-  if (player.x > x - w + 1 && 
-      player.x < x + w - 11 && 
-      player.y > y - h - 7 && 
-      player.y < y - h - 2) {
-      player.y = y - h - 7;
-  }
-  //Bottom of box collision
-  if (player.x > x - w + 1 && 
-      player.x < x + w - 11 && 
-      player.y > y + h - 30 && 
-      player.y < y + h - 25) {
-      player.y = y + h - 25;
-  }
-  //Right of box collision
-  if (player.x > x + w - 20 && 
-      player.x < x + w - 10 && 
-      player.y > y - h - (player.sz % h) + 1 && 
-      player.y < y + (h - player.sz / 2) - 6) {
-      player.x = x + h - 10;
-  }
-  // Left of box collision
-  if (player.x > x - w && 
-      player.x < x - w + 10 && 
-      player.y > y - h - (player.sz % h) + 1 && 
-      player.y < y + (h - player.sz / 2) - 6) {
-      player.x = x - player.sz + (player.sz % h);
-  }
-  return player;
 }
 
 function setup() {
@@ -273,19 +233,64 @@ function inventorySlots() {
     top: 5,
     bottom: height - (slotSize + 5),
   }
+  let slotPos = {
+    x:0 ,
+    y:0 ,
+  };
   let textPos = slotSize/5;
   noStroke();
   fill(50);
   stroke(200);
   strokeWeight(3);
-  // rect(invPos.middle - 3, invPos.bottom, (invSize * slotSize) + 6, slotSize);
   for (let i = 0; i < invSize; i++) {
     image(invPic, (slotSize * i) + invPos.middle, invPos.bottom, slotSize, slotSize);
+    slotPos.x = slotSize * i + invPos.middle;
+    slotPos.y = invPos.bottom;
     stroke(0);
     strokeWeight(0.5);
     textSize(textPos + 3);
     text(i + 1, (slotSize * i) + invPos.middle + textPos, invPos.bottom + (slotSize - textPos))
   }
+}
 
+// Collision Detection Functions------------------------------------------------------------------------------------
 
+function mouseHitboxChecker(x, y, w) {
+  if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + w) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function p1HitboxChecker(player, x, y, w, h) {
+  //Top of box collision
+  if (player.x > x - w + 1 && 
+      player.x < x + w - 11 && 
+      player.y > y - h - 7 && 
+      player.y < y - h - 2) {
+      player.y = y - h - 7;
+  }
+  //Bottom of box collision
+  if (player.x > x - w + 1 && 
+      player.x < x + w - 11 && 
+      player.y > y + h - 30 && 
+      player.y < y + h - 25) {
+      player.y = y + h - 25;
+  }
+  //Right of box collision
+  if (player.x > x + w - 20 && 
+      player.x < x + w - 10 && 
+      player.y > y - h - (player.sz % h) + 1 && 
+      player.y < y + (h - player.sz / 2) - 6) {
+      player.x = x + h - 10;
+  }
+  // Left of box collision
+  if (player.x > x - w && 
+      player.x < x - w + 10 && 
+      player.y > y - h - (player.sz % h) + 1 && 
+      player.y < y + (h - player.sz / 2) - 6) {
+      player.x = x - player.sz + (player.sz % h);
+  }
+  return player;
 }
