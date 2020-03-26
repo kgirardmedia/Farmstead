@@ -87,7 +87,7 @@ function p1HitboxChecker(player, x, y, w, h) {
 function setup() {
   frameRate(60);
   allLayers();
-  createCanvas(800, 600);
+  createCanvas(960, 720);
   p1 = new character(450, 400, 40);
   parse = new parseMap();
   render = new renderMap();
@@ -266,19 +266,26 @@ class renderMap {
 }
 
 function inventorySlots() {
+  let slotSize = (width/20);
   let invSize = 8
   let invPos = {
-    middle: (width/2) - (invSize * 37/2),
+    middle: (width/2) - ((invSize * slotSize)/2),
     top: 5,
-    bottom: height - 42
+    bottom: height - (slotSize + 5),
   }
+  let textPos = slotSize/5;
+  noStroke();
+  fill(50);
+  stroke(200);
+  strokeWeight(3);
+  // rect(invPos.middle - 3, invPos.bottom, (invSize * slotSize) + 6, slotSize);
   for (let i = 0; i < invSize; i++) {
-    noStroke();
-    fill(255);
-    textSize(12);
-    image(invPic, (37 * i) + invPos.middle, invPos.bottom, 38, 38);
-    text(i + 1, (37 * i) + (invPos.middle + 23), invPos.bottom + 32)
-
+    image(invPic, (slotSize * i) + invPos.middle, invPos.bottom, slotSize, slotSize);
+    stroke(0);
+    strokeWeight(0.5);
+    textSize(textPos + 3);
+    text(i + 1, (slotSize * i) + invPos.middle + textPos, invPos.bottom + (slotSize - textPos))
   }
+
 
 }
