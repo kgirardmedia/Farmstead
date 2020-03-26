@@ -1,4 +1,5 @@
 let p1;
+let invPic;
 let grid = [];
 let debug;
 let guy;
@@ -12,6 +13,7 @@ let scroll = {
 };
 
 function preload() {
+  invPic = loadImage("invPic.png")
   tileSet = loadImage("Tilesets/Environment/terrain_atlas.png");
   guy = loadImage("Entities/Player/Player.png");
   selector = loadImage("selector.png");
@@ -102,7 +104,7 @@ function draw() {
   render.Foreground(2);
   characterMovement();
   render.Hitboxes();
-
+  inventorySlots();
   if (debug == true) {
     fill(255);
     stroke(0);
@@ -261,4 +263,20 @@ class renderMap {
   Hitboxes() {
     parse.parseHitboxData(mapLayers[7], 64, 32, tileSet);
   }
+}
+
+function inventorySlots() {
+  let invSize = 8
+  let invPos = {
+    middle: (width/2) - (invSize * 37/2),
+    top: 5,
+    bottom: height - 42
+  }
+  for (let i = 0; i < invSize; i++) {
+    fill(140);
+    stroke(255);
+    strokeWeight(2);
+    image(invPic, (37 * i) + invPos.middle, invPos.bottom, 38, 38);
+  }
+
 }
