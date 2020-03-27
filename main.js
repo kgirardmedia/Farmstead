@@ -67,7 +67,7 @@ function draw() {
   render.Hitboxes();
   hotbar.display();
   hotbar.mouseOverInv();
-  // print(hotbar.mouseOverBar);
+  print(hotbar.mouseOverBar);
   if (debug == true) {
     fill(255);
     stroke(0);
@@ -198,7 +198,7 @@ function drawGrid() {
 function mouseGridHover() {
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
-      if (mouseHitboxChecker(grid[i][j].cellX, grid[i][j].cellY, grid[i][j].cellW)) {
+      if (mouseHitboxChecker(grid[i][j].cellX, grid[i][j].cellY, grid[i][j].cellW) && hotbar.mouseOverBar == false) {
         fill(255, 100);
         image(selector, i * 32 + scroll.x, j * 32 + scroll.y, 32, 32, 0, 0, 200, 200);
       }
@@ -266,9 +266,9 @@ mouseOverInv() {
   noStroke();
   rect((this.slotSize * i) + this.invPos.middle +  8, this.invPos.bottom + 8, this.slotSize - 16, this.slotSize - 16)
   }
-  if (mouseHitboxChecker(this.slotPosX[i], this.slotPosY[i], this.slotSize) == false) {
-    this.mouseOverBar = false;
-  }
+  // if (mouseHitboxChecker(this.slotPosX[i], this.slotPosY[i], this.slotSize) == false) {
+  //   this.mouseOverBar = false;
+  // }
 }
 }
 }
